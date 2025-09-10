@@ -11,7 +11,6 @@ from modules.db_tools.crud_operations import (
     get_special_transactions_balance,
 )
 from modules.db_tools.filters import get_allowed_building_df
-from modules.db_tools.db_connection import get_engine
 
 
 def render(conn, T):
@@ -239,7 +238,7 @@ def render(conn, T):
                 q += " AND t.method = %s"
                 params.append(payment_method)
             q += " ORDER BY t.payment_date DESC"
-            df_trans = pd.read_sql(q, get_engine(), params=params)
+            df_trans = pd.read_sql(q, conn, params=params)
             total_paid = 0
             if not df_trans.empty:
                 df_trans["payment_date"] = pd.to_datetime(df_trans["payment_date"], errors="coerce")
@@ -277,7 +276,7 @@ def render(conn, T):
                 q += " AND e.status = %s"
                 params.append(expense_status)
             q += " ORDER BY e.start_date DESC"
-            df_expenses = pd.read_sql(q, get_engine(), params=params)
+            df_expenses = pd.read_sql(q, conn, params=params)
             total_cost = 0
             if not df_expenses.empty:
                 df_expenses["start_date"] = pd.to_datetime(df_expenses["start_date"], errors="coerce")
