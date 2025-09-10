@@ -3,18 +3,11 @@ import pandas as pd
 import bcrypt
 import streamlit as st
 
-from .db_connection import get_engine
-
-
-def _read_sql(query, params=None):
-    """Helper to execute SQL queries and return a DataFrame."""
-    return pd.read_sql(query, get_engine(), params=params)
-
 
 def get_buildings(conn):
     """Return a DataFrame of all buildings."""
     query = "SELECT * FROM buildings;"
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 
 def get_dashboard_counts(conn):
@@ -29,7 +22,7 @@ def get_dashboard_counts(conn):
                 WHERE is_active = TRUE AND end_date IS NULL
             ) AS active_residents
     """
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 
 def add_building(conn, name, city, street, home_number):
@@ -138,7 +131,7 @@ def get_db_activity(conn):
         WHERE datname = current_database()
         ORDER BY state DESC, query_start DESC;
     """
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 def terminate_connection(conn, pid):
     """
@@ -183,7 +176,7 @@ def get_apartments_by_building(conn, building_id):
         WHERE building_id = %s
         ORDER BY floor, apartment_number;
     """
-    return _read_sql(query, params=(building_id,))
+    return pd.read_sql(query, conn, params=(building_id,))
 
 def get_residents_by_building(conn, building_id):
     """Get active residents for a building."""
@@ -196,7 +189,7 @@ def get_residents_by_building(conn, building_id):
           AND r.end_date IS NULL
         ORDER BY a.floor, a.apartment_number;
     """
-    return _read_sql(query, params=(building_id,))
+    return pd.read_sql(query, conn, params=(building_id,))
 
 
 def get_financial_summary_range(conn, start_date, end_date, building_id=None, exclude_apartment_0=False):
@@ -237,7 +230,7 @@ def get_financial_summary_range(conn, start_date, end_date, building_id=None, ex
         start_date, end_date, building_id, building_id                             # expenses
     ]
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 
@@ -276,7 +269,7 @@ def get_expense_details_range(conn, start_date, end_date, building_id=None):
         query += " AND e.building_id = %s"
         params.append(building_id)
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 def insert_bulk_transactions(conn, building_id, records, payment_date, method):
     """Bulk insert transaction records."""
     """
@@ -513,7 +506,7 @@ def get_unpaid_apartments_for_period(conn, building_id, year, months: list):
           AND charge_year = %s
           AND charge_month_num = ANY(%s)
     """
-    return _read_sql(query, params=(building_id, year, months))
+    return pd.read_sql(query, conn, params=(building_id, year, months))
 
 
 def get_unpaid_apartments_range(conn, start_date, end_date, building_id):
@@ -532,7 +525,7 @@ def get_unpaid_apartments_range(conn, start_date, end_date, building_id):
     """
     params = [start_date, end_date, building_id]
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 
@@ -576,7 +569,7 @@ def get_financial_summary(conn, year=None, month=None, building_id=None, exclude
         year, year, month, month, building_id, building_id                         # expenses
     ]
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 def get_residents_by_building_full(conn, building_id, active_only=False):
@@ -598,7 +591,7 @@ def get_residents_by_building_full(conn, building_id, active_only=False):
         query += " AND r.is_active = TRUE AND r.end_date IS NULL"
     query += " ORDER BY a.floor, a.apartment_number, r.role"
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 def set_active_resident(conn, resident_id, apartment_id):
@@ -633,7 +626,7 @@ def get_unpaid_apartments(conn, building_id, year, month):
           AND charge_year = %s
           AND charge_month_num = %s
     """
-    return _read_sql(query, params=(building_id, year, month))
+    return pd.read_sql(query, conn, params=(building_id, year, month))
 
 def get_expected_charge_years(conn):
     """
@@ -644,7 +637,7 @@ def get_expected_charge_years(conn):
         FROM expected_charges
         ORDER BY charge_year DESC
     """
-    df = _read_sql(query)
+    df = pd.read_sql(query, conn)
     return df["charge_year"].tolist()
 
 
@@ -683,7 +676,7 @@ def get_expected_income_details(conn, year, month=None, building_id=None):
         query += " AND ec.building_id = %s"
         params.append(building_id)
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 def get_expense_details(conn, year, month=None, building_id=None):
@@ -707,7 +700,7 @@ def get_expense_details(conn, year, month=None, building_id=None):
         query += " AND e.building_id = %s"
         params.append(building_id)
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 # --- SUPPLIERS ---
 def get_suppliers_by_building(conn, building_id):
@@ -819,7 +812,7 @@ def get_expenses(conn):
         JOIN buildings b ON e.building_id = b.building_id
         ORDER BY e.start_date DESC;
     """
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 
 def add_expense(
@@ -914,7 +907,7 @@ def add_expense_document(conn, building_id, expense_id, file_name, file_url):
 def get_expense_documents(conn, expense_id):
     """Retrieve documents linked to an expense."""
     query = "SELECT * FROM expense_documents WHERE expense_id = %s ORDER BY doc_id;"
-    return _read_sql(query, params=(expense_id,))
+    return pd.read_sql(query, conn, params=(expense_id,))
 
 
 def delete_expense_document(conn, doc_id):
@@ -927,7 +920,7 @@ def delete_expense_document(conn, doc_id):
 def get_expense_document_counts(conn):
     """Return a dataframe of document counts per expense."""
     query = "SELECT expense_id, COUNT(*) AS doc_count FROM expense_documents GROUP BY expense_id;"
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 
 
@@ -974,7 +967,7 @@ def get_buildings_by_user(conn, user_id, role):
             JOIN user_buildings ub ON b.building_id = ub.building_id
             WHERE ub.user_id = %s;
         """
-        return _read_sql(query, params=(user_id,))
+        return pd.read_sql(query, conn, params=(user_id,))
 
 
 def get_all_users(conn):
@@ -984,14 +977,12 @@ def get_all_users(conn):
         FROM users
         ORDER BY username;
     """
-    return _read_sql(query)
+    return pd.read_sql(query, conn)
 
 
 def get_all_buildings(conn):
     """Return basic building info for all buildings."""
-    return _read_sql(
-        "SELECT building_id, building_name FROM buildings ORDER BY building_name;"
-    )
+    return pd.read_sql("SELECT building_id, building_name FROM buildings ORDER BY building_name;", conn)
 
 def get_user_building_ids(conn, user_id):
     """Get building IDs linked to a user."""
@@ -1072,7 +1063,7 @@ def get_paid_transactions(conn, building_id=None, selected_month=None):
 
     query += " ORDER BY t.payment_date DESC"
 
-    return _read_sql(query, params=params)
+    return pd.read_sql(query, conn, params=params)
 
 
 
@@ -1205,7 +1196,7 @@ def get_special_transactions_balance(conn, start_date, end_date, building_id=Non
     """
 
     params = [start_date, end_date, building_id, building_id]
-    result = _read_sql(query, params=params)
+    result = pd.read_sql(query, conn, params=params)
     return result.at[0, "special_balance"]
 
 
@@ -1236,19 +1227,27 @@ def export_building_data(conn, building_id):
     import zipfile
 
     dataframes = {
-        "buildings": _read_sql(
-            "SELECT * FROM buildings WHERE building_id = %s", params=(building_id,),
+        "buildings": pd.read_sql(
+            "SELECT * FROM buildings WHERE building_id = %s",
+            conn,
+            params=(building_id,),
         ),
         "apartments": get_apartments_by_building(conn, building_id),
         "residents": get_residents_by_building_full(conn, building_id),
-        "expenses": _read_sql(
-            "SELECT * FROM expenses WHERE building_id = %s", params=(building_id,),
+        "expenses": pd.read_sql(
+            "SELECT * FROM expenses WHERE building_id = %s",
+            conn,
+            params=(building_id,),
         ),
-        "transactions": _read_sql(
-            "SELECT * FROM transactions WHERE building_id = %s", params=(building_id,),
+        "transactions": pd.read_sql(
+            "SELECT * FROM transactions WHERE building_id = %s",
+            conn,
+            params=(building_id,),
         ),
-        "invoices": _read_sql(
-            "SELECT * FROM invoices WHERE building_id = %s", params=(building_id,),
+        "invoices": pd.read_sql(
+            "SELECT * FROM invoices WHERE building_id = %s",
+            conn,
+            params=(building_id,),
         ),
     }
 
