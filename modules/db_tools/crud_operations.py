@@ -8,6 +8,8 @@ from .db_connection import get_engine
 
 def _read_sql(query, params=None):
     """Helper to execute SQL queries and return a DataFrame."""
+    if isinstance(params, list):
+        params = tuple(params)
     return pd.read_sql(query, get_engine(), params=params)
 
 
