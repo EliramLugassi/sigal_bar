@@ -8,11 +8,10 @@ function is invoked from ``app.py`` to display the UI.
 import streamlit as st
 import bcrypt
 import pandas as pd
-from io import BytesIO
 from auth import signup
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_all_users, get_all_buildings, get_user_building_ids,
-    update_user_buildings, create_user, update_user, delete_user,
+    update_user_buildings, update_user, delete_user,
     get_user_id, get_user_session_count, count_active_users,
     get_active_users, get_db_activity, terminate_connection,
     get_open_support_tickets, update_support_ticket_status,

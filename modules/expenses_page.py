@@ -6,9 +6,7 @@ import streamlit as st
 import pandas as pd
 import tempfile
 from google.api_core.exceptions import GoogleAPIError
-from crud_operations import (
-    get_buildings,
-    get_suppliers,
+from modules.db_tools.crud_operations import (
     get_expenses,
     add_expense,
     update_expense,
@@ -21,19 +19,15 @@ from crud_operations import (
     get_expense_document_counts,
     get_expense_details_range,
 )
-from filters import get_allowed_building_df
-from gcs_utils import (
+from modules.db_tools.filters import get_allowed_building_df
+from modules.google_tools.gcs_utils import (
     upload_document,
-    delete_document,
     delete_document_by_url,
-    get_document_url,
     get_document_url_from_file,
 )
-from receipt_parser import send_receipt_url_to_chatgpt
-from receipt_parser import convert_file_to_gpt_image
 import unicodedata
 import re
-import time
+
 
 def sanitize_filename(filename):
     """Clean a filename by removing special characters and accents."""

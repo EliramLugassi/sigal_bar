@@ -2,13 +2,13 @@
 
 import streamlit as st
 import datetime
-from crud_operations import get_buildings, get_paid_transactions, create_invoice, log_invoice_send
-from pdf_generator import generate_invoice_pdf
-from localization import translate_payment_method
-from email_utils import send_invoice_email
+from modules.db_tools.crud_operations import get_paid_transactions, create_invoice, log_invoice_send
+from modules.utils.pdf_generator import generate_invoice_pdf
+from modules.utils.localization import translate_payment_method
+from modules.utils.email_utils import send_invoice_email
 import base64
 import os
-from filters import get_allowed_building_df
+from modules.db_tools.filters import get_allowed_building_df
 
 def render(conn, T):
     """Display invoice generation options for a selected building."""

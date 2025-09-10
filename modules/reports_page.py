@@ -3,14 +3,14 @@ import streamlit as st
 import pandas as pd
 import datetime
 import plotly.graph_objects as go
-from pdf_generator import generate_report_summary_pdf
+from modules.utils.pdf_generator import generate_report_summary_pdf
 
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_financial_summary_range,
     get_expense_details_range,
     get_special_transactions_balance,
 )
-from filters import get_allowed_building_df
+from modules.db_tools.filters import get_allowed_building_df
 
 
 def render(conn, T):

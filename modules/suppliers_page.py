@@ -1,8 +1,8 @@
 """Page for managing suppliers linked to each building."""
 
 import streamlit as st
-from crud_operations import get_suppliers, add_supplier, update_supplier, delete_supplier, get_allowed_suppliers,get_suppliers_by_building
-from filters import get_allowed_building_df
+from modules.db_tools.crud_operations import add_supplier, update_supplier, delete_supplier, get_suppliers_by_building
+from modules.db_tools.filters import get_allowed_building_df
 
 def render(conn, T):
     """Render supplier management for the selected building."""

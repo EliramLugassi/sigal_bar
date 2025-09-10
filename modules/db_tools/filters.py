@@ -143,8 +143,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
-from crud_operations import (
-    get_all_buildings,
+from modules.db_tools.crud_operations import (
     get_user_building_ids,
     get_apartments_by_building,
     get_expected_charge_years,

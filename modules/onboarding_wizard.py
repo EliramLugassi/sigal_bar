@@ -3,10 +3,9 @@
 import streamlit as st
 import datetime
 import pandas as pd
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_user_by_username,
     get_user_id,
-    get_user_building_ids,
     add_building,
     get_apartments_by_building,
     get_residents_by_building_full,
@@ -14,15 +13,12 @@ from crud_operations import (
     add_expense,
     get_buildings,
     get_suppliers,
-    add_supplier,
-    get_expense_details,
     get_expenses,
     delete_expense,
     update_expense,
-    deactivate_resident,
 )
-from localization import get_translation
-from language import setup_language_selector
+from modules.utils.localization import get_translation
+from modules.utils.language import setup_language_selector
 
 
 def render(conn):

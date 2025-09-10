@@ -3,12 +3,11 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_paid_transactions,
-    get_buildings,
-    get_apartments_by_building, get_unpaid_apartments,get_expected_charge_years
+    get_apartments_by_building, get_expected_charge_years
 )
-from filters import get_user_building_ids,get_allowed_building_df
+from modules.db_tools.filters import get_allowed_building_df
 
 def render(conn, T):
     """Display and edit payment transactions for a building."""
@@ -194,7 +193,7 @@ def render(conn, T):
                         conn.commit()
                         st.success(T("transaction_added_for").format(first_name=first_name, last_name=last_name))
                         st.rerun()
-    from crud_operations import (
+    from modules.db_tools.crud_operations import (
         get_unpaid_apartments_for_period,
         insert_bulk_transactions,
         has_expected_charges_for_period,

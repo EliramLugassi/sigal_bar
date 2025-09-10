@@ -2,8 +2,8 @@
 import bcrypt
 import streamlit as st
 
-from crud_operations import create_user, get_user_by_username
-from localization import get_translation
+from modules.db_tools.crud_operations import create_user, get_user_by_username
+from modules.utils.localization import get_translation
 import time
 
 from modules import onboarding_wizard

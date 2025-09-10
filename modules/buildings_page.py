@@ -8,7 +8,7 @@ the Streamlit application.
 import streamlit as st
 import datetime
 import pandas as pd
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_user_id,
     get_user_role,
     get_buildings_by_user,
@@ -22,7 +22,7 @@ from crud_operations import (
     upsert_bulk_apartment_fees,
     deactivate_resident,
 )
-from email_utils import send_invoice_email
+from modules.utils.email_utils import send_invoice_email
 
 def render(conn, T):
     """Display the buildings dashboard and related management tools."""

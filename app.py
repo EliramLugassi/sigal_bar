@@ -1,13 +1,11 @@
 """Streamlit app entrypoint for apartment management UI."""
 import streamlit as st
-from datetime import datetime
-from db_connection import get_connection
-from language import setup_language_selector, get_translator
-from auth import login, signup
+from modules.db_tools.db_connection import get_connection
+from modules.utils.language import setup_language_selector, get_translator
 from modules import (
     dashboard_page, buildings_page, invoices_page,
     suppliers_page, expenses_page, admin_panel, transactions_page,
-    reports_page, my_profile, login_page, onboarding_wizard
+    reports_page, my_profile, login_page, onboarding_wizard, support_page
 )
 
 
@@ -16,7 +14,6 @@ conn = get_connection()
 T = get_translator()
 
 # 🔐 Session control
-import time  # ⬅️ add this near the top if not already imported
 
 import time
 from datetime import datetime
@@ -149,7 +146,6 @@ if st.session_state.get("admin_mode") and actual_role == "admin":
 
 # 🔀 Page routing
 if st.session_state.get("support_open"):
-    import support_page
     support_page.render(conn, T)
 elif menu == "dashboard":
     dashboard_page.render(conn, T)

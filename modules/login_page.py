@@ -2,8 +2,8 @@
 
 import streamlit as st
 from auth import login
-from localization import get_translation
-from language import setup_language_selector
+from modules.utils.localization import get_translation
+from modules.utils.language import setup_language_selector
 
 def render(conn):
     """Render the login form for users."""

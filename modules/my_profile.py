@@ -2,7 +2,8 @@
 
 import streamlit as st
 import bcrypt
-from crud_operations import get_user_by_username, update_user
+from modules.db_tools.crud_operations import get_user_by_username
+
 
 def render(conn, T):
     """Allow a user to update their email and password."""
@@ -15,7 +16,7 @@ def render(conn, T):
         st.error(T("user_not_found"))
         return
 
-    from crud_operations import get_user_building_ids
+    from modules.db_tools.crud_operations import get_user_building_ids
 
     ...
 
@@ -103,7 +104,7 @@ def render(conn, T):
     )
 
     if st.button(T("download_csv")):
-        from crud_operations import export_building_data
+        from modules.db_tools.crud_operations import export_building_data
 
         zip_buffer = export_building_data(conn, selected_b_id)
         st.download_button(

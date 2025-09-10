@@ -5,17 +5,15 @@ import datetime
 import pandas as pd
 import plotly.graph_objects as go
 from modules.gpt_assistant import ask_gpt
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_buildings,
     get_financial_summary_range,
     get_expense_details_range,
     get_unpaid_apartments_range,
-    get_expenses,get_special_transactions_balance,get_financial_summary
+    get_expenses,get_special_transactions_balance
 )
-from filters import (
-    get_allowed_building_df,
-    filter_df_by_allowed_buildings,
-    building_filter
+from modules.db_tools.filters import (
+    get_allowed_building_df
 )
 def abbreviate_currency(value):
     """Format numeric currency values with K/M shorthand."""
@@ -278,7 +276,7 @@ def render(conn, T):
 
                 st.success(T("adjustment_recorded"))
                 st.rerun()
-            from crud_operations import delete_last_reconciliation
+            from modules.db_tools.crud_operations import delete_last_reconciliation
 
             with col2:
                 if st.button(T("undo_last_reconciliation")):

@@ -9,7 +9,7 @@ import arabic_reshaper
 from localization import get_translation, translate_payment_method
 import streamlit as st
 import pandas as pd
-from crud_operations import (
+from modules.db_tools.crud_operations import (
     get_financial_summary_range,
     get_expense_details_range,
     get_special_transactions_balance,
